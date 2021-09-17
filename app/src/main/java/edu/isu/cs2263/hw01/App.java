@@ -5,14 +5,18 @@ package edu.isu.cs2263.hw01;
 
 import org.apache.commons.cli.ParseException;
 
+import java.util.Locale;
+import java.util.Scanner;
+
 public class App {
 
     public static void main(String[] args) {
 
+        Eval eval = new Eval();
 
         InputReader in = null;
         try {
-            in = new InputReader(args);
+            in = new InputReader(args, eval);
             in.checkInput();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -20,7 +24,21 @@ public class App {
 
 
 
+        Scanner scanner = new Scanner(System.in);
+        scanner.useDelimiter(System.lineSeparator());
 
+        String equation = "";
+
+        while(true) {
+
+            System.out.print("Enter equation: ");
+
+            equation = scanner.next();
+
+            if(equation.toLowerCase().equals("exit") || equation.toLowerCase().equals("e")) return; //exit for loop
+
+            System.out.println(eval.eval(equation));
+        }
 
 
 

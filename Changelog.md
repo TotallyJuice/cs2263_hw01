@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+##[1.1.0] - 2021-09-17
+### Added
+ - Evauation of equation given in string form
+ - User input for equation through CL
+ - Input for equation through .txt doc
+
 ## [1.0.0] - 2021-09-16
 ### Added 
  - CLI commands for help prompts and setting batch and output files.
