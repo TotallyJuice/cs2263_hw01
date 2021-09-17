@@ -3,6 +3,7 @@ package edu.isu.cs2263.hw01;
 import org.apache.commons.cli.*;
 
 import java.io.*;
+import java.util.ArrayList;
 
 // a class to manage the inputs from both the command line and batch files
 public class InputReader {
@@ -11,7 +12,9 @@ public class InputReader {
     private CommandLineParser parser;
     private CommandLine cmd;
     private HelpFormatter helpFormatter;
-    Eval eval;
+    private Eval eval;
+    private String outputFile;
+    private ArrayList<String> equations;
 
     public InputReader(String[] args, Eval eval) throws ParseException {
         this.options = new Options();
@@ -28,6 +31,8 @@ public class InputReader {
         this.helpFormatter = new HelpFormatter();
 
         this.eval = eval;
+        this.outputFile = null;
+        this.equations = new ArrayList<>();
 
     }
 
@@ -36,18 +41,29 @@ public class InputReader {
 
         if(this.cmd.hasOption("h")){
             helpFormatter.printHelp("eval [Options] \n Evaluation of simple mathematical equations", options);
-        }else if(this.cmd.hasOption("b")){
+        }
+        if(this.cmd.hasOption("b")){
             System.out.print("batch value: ");
             System.out.println(cmd.getOptionValue("b", "null"));
             this.readFromFile(cmd.getOptionValue("b"));
-        }else if(this.cmd.hasOption("o")){
+        }
+        if(this.cmd.hasOption("o")){
             System.out.print("output value: ");
             System.out.println(cmd.getOptionValue("o", "null"));
+            this.outputFile = cmd.getOptionValue("o");
         }
 
     }
 
-    private void readFromFile(String path){
+    public String getOutputFile(){//for getting the output file.
+        return this.outputFile;
+    }
+
+    public ArrayList<String> getEquations(){//for getting all equations solved by input file already
+        return this.equations;
+    }
+
+    private void readFromFile(String path){//method for reading file provided
         File file = new File(path);
         BufferedReader br = null;
         try {
@@ -59,15 +75,22 @@ public class InputReader {
 
         String equation = "";
 
-        while(true){
+        while(true){//loop through all lines and solve all equations
             try {
                 if (!((equation = br.readLine()) != null)) break;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println(this.eval.eval(equation));
+            float solution = this.eval.eval(equation);
+            System.out.println(solution);
+            this.equations.add(equation + " = " + solution);
         }
 
+        try {
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

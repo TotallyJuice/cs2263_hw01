@@ -5,6 +5,9 @@ package edu.isu.cs2263.hw01;
 
 import org.apache.commons.cli.ParseException;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -14,7 +17,7 @@ public class App {
 
         Eval eval = new Eval();
 
-        InputReader in = null;
+        InputReader in = null;//try and create the input reader and check for args
         try {
             in = new InputReader(args, eval);
             in.checkInput();
@@ -28,17 +31,40 @@ public class App {
         scanner.useDelimiter(System.lineSeparator());
 
         String equation = "";
+        ArrayList<String> equations = in.getEquations();
 
-        while(true) {
+        boolean running = true;
+
+        while(running) {//loop through asking for and solving equation until told to exit
 
             System.out.print("Enter equation: ");
 
             equation = scanner.next();
 
-            if(equation.toLowerCase().equals("exit") || equation.toLowerCase().equals("e")) return; //exit for loop
+            if(equation.toLowerCase().equals("exit") || equation.toLowerCase().equals("e")){
+                running = false; //exit for loop
+                continue;
+            }
 
-            System.out.println(eval.eval(equation));
+            float solution = eval.eval(equation);
+            System.out.println(solution);
+            equations.add(equation + " = " + solution);
         }
+
+        String out = in.getOutputFile();
+
+        if(out != null){
+            try {
+                FileWriter writer = new FileWriter(out);
+                for (String str : equations) {
+                    writer.write(str + System.lineSeparator());
+                }
+                writer.close();
+            }catch(Exception e){
+                System.out.println("Problem saving to file");
+            }
+        }
+
 
 
 
