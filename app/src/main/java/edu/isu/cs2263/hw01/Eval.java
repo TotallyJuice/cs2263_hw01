@@ -32,6 +32,7 @@ public class Eval {
 
         }catch(Exception e){//catch if equation has any errors in its format
             System.out.println("Equation is not able to be read due to formatting errors");
+            return 0;
         }
 
         return total;
